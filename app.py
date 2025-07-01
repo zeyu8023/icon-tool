@@ -22,8 +22,9 @@ def process_image(filepath, background, output_path):
     outname = f"{name}_{timestamp}{ext}"
     outpath = os.path.join(output_path, outname)
 
+    # 使用 ImageMagick 6 的 convert 命令
     cmd = [
-        "magick", filepath,
+        "convert", filepath,
         "-resize", "225x225",
         "-gravity", "center",
         "-background", background,
