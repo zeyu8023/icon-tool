@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>图标处理工具</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🖼️ 图标处理工具</h1>
+            <button id="theme-toggle">🌙 暗色模式</button>
+        </div>
+
+        <form method="POST" enctype="multipart/form-data" id="upload-form">
+            <div class="section card">
+                <label>拖拽或点击上传图像文件：</label>
+                <div id="drop-area">
+                    <p>将图像拖拽到此区域，或</p>
+                    <label for="fileElem">📁 选择文件</label>
+                    <input type="file" name="files" id="fileElem" multiple accept="image/*" style="display: none;">
+                </div>
+
+                <div id="preview"></div>
+
+                <div class="form-row">
+                    <select name="bg">
+                        <option value="transparent">透明背景</option>
+                        <option value="white">白色背景</option>
+                    </select>
+                    <button type="submit">🚀 开始处理</button>
+                    <a id="download-single" class="download-btn" style="display: none;">⬇️ 下载图片</a>
+                    
+                </div>
+
+                {% if files %}
+                    <h2>📦 输出文件</h2>
+                    {% if files|length == 1 %}
+                        <ul>
+                            <li>
+                                {{ files[0] }}
+                                <a href="{{ url_for('download_file', filename=files[0]) }}" class="download-btn">⬇️ 下载图片</a>
+                            </li>
+                        </ul>
+                    {% else %}
+                        <div class="form-row" style="margin-bottom: 16px;">
+                            <button type="button" id="select-all">✅ 全选</button>
+                            <button type="button" id="download-selected">⬇️ 下载选中项</button>
+                        </div>
+                        <ul id="file-list">
+                            {% for file in files %}
+                                <li>
+                                    <input type="checkbox" class="file-checkbox" value="{{ file }}">
+                                    {{ file }}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </form>
+
+        {% if previews %}
+            <h2>🔍 处理前后对比</h2>
+            <div class="compare-grid">
+                {% for original, processed in previews %}
+                    <div class="compare-item">
+                        <p>{{ original }}</p>
+                        <div class="compare-images">
+                            <img src="{{ url_for('static', filename='uploads/' ~ original) }}" alt="原图">
+                            <img src="{{ url_for('download_file', filename=processed) }}" alt="处理后">
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% if log %}
+            <h2>📄 处理日志</h2>
+            <ul>
+                {% for entry in log %}
+                    <li>{{ entry }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
