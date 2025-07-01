@@ -7,6 +7,7 @@ STATIC_UPLOAD_FOLDER = os.path.join('static', 'uploads')
 OUTPUT_FOLDER = 'output'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp'}
 
+# 确保目录存在
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(STATIC_UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
@@ -43,12 +44,13 @@ def index():
         background = "none" if request.form.get("bg") == "transparent" else "white"
         uploaded_files = request.files.getlist("files")
 
+        # 清空旧目录并重新创建
         shutil.rmtree(UPLOAD_FOLDER, ignore_errors=True)
         shutil.rmtree(STATIC_UPLOAD_FOLDER, ignore_errors=True)
         shutil.rmtree(OUTPUT_FOLDER, ignore_errors=True)
-        os.makedirs(UPLOAD_FOLDER)
-        os.makedirs(STATIC_UPLOAD_FOLDER)
-        os.makedirs(OUTPUT_FOLDER)
+        os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+        os.makedirs(STATIC_UPLOAD_FOLDER, exist_ok=True)
+        os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
         for file in uploaded_files:
             if file and allowed_file(file.filename):
