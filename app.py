@@ -57,8 +57,10 @@ def index():
                 filepath = os.path.join(UPLOAD_FOLDER, file.filename)
                 file.save(filepath)
 
-                # 复制到 static/uploads 供前端预览
-                shutil.copy(filepath, os.path.join(STATIC_UPLOAD_FOLDER, file.filename))
+                # 复制到 static/uploads 供前端预览（避免 SameFileError）
+                preview_path = os.path.join(STATIC_UPLOAD_FOLDER, file.filename)
+                if os.path.abspath(filepath) != os.path.abspath(preview_path):
+                    shutil.copy(filepath, preview_path)
 
                 outname, success = process_image(filepath, background, OUTPUT_FOLDER)
                 if success:
