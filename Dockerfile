@@ -1,7 +1,6 @@
-# 使用官方 Python 精简版镜像
 FROM python:3.10-slim
 
-# 安装系统依赖和 ImageMagick
+# 安装 ImageMagick 和依赖
 RUN apt-get update && apt-get install -y \
     imagemagick \
     && rm -rf /var/lib/apt/lists/*
@@ -18,7 +17,7 @@ COPY . .
 # 安装 Python 依赖
 RUN pip install --no-cache-dir flask
 
-# 设置环境变量（可选）
+# 设置默认端口
 ENV PORT=5080
 
 # 暴露端口
